@@ -1,12 +1,9 @@
 #!/usr/bin/python3
-
 """
 This module contains a function that queries the Reddit API and
 prints the count of occurrences of each word in the word_list
 in the titles of all hot articles for a given subreddit.
 """
-
-
 import requests
 
 def count_words(subreddit, word_list, after='', word_count={}):
