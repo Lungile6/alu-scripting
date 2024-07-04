@@ -23,20 +23,16 @@ def top_ten(subreddit):
     # Set the User-Agent header to mimic a browser request
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
     
-    # Make the GET request to the Reddit API
-    response = requests.get(url, headers=headers, allow_redirects=False)
     
-    # Check if the request was successful
-    if response.status_code == 200:
-        # Parse the JSON response
-        data = response.json() 
-        
-        # Extract the list of posts
-        posts = data.get('data', {}).get('children', [])
-        
-        # Print the title of each post
-        for post in posts:
-            print(post.get('data', {}).get('title'))
-    else:
-        # Print None if the subreddit is invalid or the request failed
+    try:
+        # Make a GET request to the Reddit API to fetch the top hot posts
+        RESPONSE = requests.get(URL, headers=HEADERS, allow_redirects=False)
+
+        # Parse the JSON response and extract the list of hot posts
+        HOT_POSTS = RESPONSE.json().get("data").get("children")
+
+        # Iterate over the list of hot posts and print the title of each post
+        [print(post.get('data').get('title')) for post in HOT_POSTS]
+    except Exception:
+        # If any exception occurs, print None to indicate an error
         print(None)

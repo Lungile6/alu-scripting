@@ -15,8 +15,7 @@ def count_words(subreddit, word_list, after='', word_count=None):
         subreddit (str): The subreddit to query.
         word_list (list): List of words to count in the titles.
         after (str): The 'after' parameter for pagination (default is '').
-        word_count (dict): Dictionary to store the count of words (default is None).
-
+        word_count (dict): Dictionary to store the count of words (default is None)
     Returns:
         None
     """
