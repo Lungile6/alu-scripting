@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 """
-This module contains a function that queries the Reddit API and
-returns the top 10 hot posts for a given subreddit.
+Print top ten hot posts!
 """
 import requests
 
@@ -23,10 +22,7 @@ def top_ten(subreddit):
 
     # Set the User-Agent header to mimic a browser request
     headers = {
-        'User-Agent': 'Mozilla / 5.0 (Windows NT 10.0
-                                      Win64
-                                      x64) AppleWebKit / 537.36
-        (KHTML, like Gecko) Chrome / 58.0.3029.110 Safari / 537.3'}
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'}
 
     try:
         # Make a GET request to the Reddit API to fetch the top hot posts

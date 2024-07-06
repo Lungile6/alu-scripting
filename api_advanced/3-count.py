@@ -1,8 +1,6 @@
 #!/usr/bin/python3
 """
-This module contains a function that queries the Reddit API and
-prints the count of occurrences of each word in the word_list
-in the titles of all hot articles for a given subreddit.
+Prints the count of occurrences of each word in the word_list.
 """
 import requests
 
@@ -26,10 +24,7 @@ def count_words(subreddit, word_list, after='', word_count=None):
         word_count = {}
 
     headers = {
-        'User-Agent': 'Mozilla / 5.0 (Windows NT 10.0
-                                      Win64
-                                      x64) AppleWebKit / 537.36
-        (KHTML, like Gecko) Chrome / 58.0.3029.110 Safari / 537.3'}
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'}
     url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
     params = {'after': after, 'limit': 100}
 
@@ -65,8 +60,7 @@ def count_words(subreddit, word_list, after='', word_count=None):
             count = title.count(word_lower)
             if count > 0:
                 print(
-                    f"Found {count} occurrences of word
-                    '{word_lower}' in title: {title}")
+                    f"Found {count} occurrences of word '{word_lower}' in title: {title}")
             word_count[word_lower] = word_count.get(word_lower, 0) + count
 
     # If there is an 'after' token, recursively call count_words to process
