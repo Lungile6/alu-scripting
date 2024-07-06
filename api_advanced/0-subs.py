@@ -20,10 +20,12 @@ def number_of_subscribers(subreddit):
         otherwise 0.
     """
     # Construct the URL for the subreddit's about.json page
-    url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
+    url = f"https://www.reddit.com/r/{subreddit}/about.json"
 
     # Set a custom User-Agent to avoid "Too Many Requests" errors
-    headers = {'User-Agent': 'ALU-scripting API 0.1'}
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
+    }
 
     try:
         # Make the GET request to the Reddit API
@@ -32,17 +34,11 @@ def number_of_subscribers(subreddit):
         # Check if the request was successful
         if response.status_code == 200:
             # Parse the JSON response
-            data = response.json()
-            # Return the number of subscribers
-            return data['data']['subscribers']
+            return response.json().get("data", {}).get("subscribers", 0)
         else:
-            # Return 0 if the subreddit is invalid or the request failed
             return 0
+
     except requests.RequestException as e:
         # Handle any request exceptions (e.g., network issues)
         print(f"An error occurred: {e}")
         return 0
-
-
-# Example usage: print the number of subscribers for the 'reddit' subreddit
-print(number_of_subscribers('reddit'))
