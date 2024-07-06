@@ -1,7 +1,5 @@
 #!/usr/bin/python3
-"""
-Return a list containing the titles of all hot articles
-"""
+"""Return a list containing the titles of all hot articles"""
 import requests
 
 

@@ -1,9 +1,5 @@
 #!/usr/bin/python3
-"""
-Queries the Reddit API, parses the title of all hot articles,
-and prints a sorted count of given keywords
-(case-insensitive, delimited by spaces).
-"""
+"""Recursive function, that returns hot articles."""
 
 import requests
 
@@ -14,12 +10,12 @@ def count_words(subreddit, word_list, after="", count=[]):
     keywords in the titles of hot posts on a subreddit.
 
     Args:
-        subreddit (str): The name of the subreddit to query.
-        word_list (list): A list of keywords to search for.
-        after (str, optional):
+        subreddit(str): The name of the subreddit to query.
+        word_list(list): A list of keywords to search for .
+        after(str, optional):
         The "after" parameter to fetch the next page of hot posts.
         Defaults to an empty string.
-        count (list, optional): A list to store the counts of each keyword.
+        count(list, optional): A list to store the counts of each keyword.
         Defaults to an empty list.
 
     Returns:

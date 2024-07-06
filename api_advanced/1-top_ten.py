@@ -1,7 +1,5 @@
 #!/usr/bin/python3
-"""
-Returning hot top ten!
-"""
+"""Returning hot top ten."""
 
 import requests
 
