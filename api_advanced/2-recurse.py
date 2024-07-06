@@ -25,7 +25,11 @@ def recurse(subreddit, hot_list=None, after=None):
     # Construct the URL for the Reddit API request
     url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'}
+        'User-Agent': 'Mozilla / 5.0 (Windows NT 10.0
+                                      Win64
+                                      x64)
+        AppleWebKit / 537.36 (KHTML, like Gecko)
+        Chrome / 126.0.0.0 Safari / 537.36'}
     params = {'after': after, 'limit': 100}
 
     # Make the API request
