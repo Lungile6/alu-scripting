@@ -1,77 +1,67 @@
 #!/usr/bin/python3
 """
-Prints the count of occurrences of each word in the word_list.
+Queries the Reddit API, parses the title of all hot articles,
+and prints a sorted count of given keywords
+(case-insensitive, delimited by spaces).
 """
+
 import requests
 
 
-def count_words(subreddit, word_list, after='', word_count=None):
+def count_words(subreddit, word_list, after="", count=[]):
     """
-    Queries the Reddit API and prints the count of
-    occurrences of each word in the word_list
-    in the titles of all hot articles for a given subreddit.
+    Function to count the occurrences of given keywords in the titles of hot posts on a subreddit.
 
     Args:
-        subreddit (str): The subreddit to query.
-        word_list (list): List of words to count in the titles.
-        after (str): The 'after' parameter for pagination (default is '').
-        word_count (dict): Dictionary to store
-        the count of words (default is None)
+        subreddit (str): The name of the subreddit to query.
+        word_list (list): A list of keywords to search for.
+        after (str, optional): The "after" parameter to fetch the next page of hot posts. Defaults to an empty string.
+        count (list, optional): A list to store the counts of each keyword. Defaults to an empty list.
+
     Returns:
         None
     """
-    if word_count is None:
-        word_count = {}
+    if after == "":
+        count = [0] * len(word_list)
 
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'}
     url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
-    params = {'after': after, 'limit': 100}
+    request = requests.get(
+        url, params={
+            'after': after}, allow_redirects=False, headers={
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"})
 
-    # Make a GET request to the Reddit API
-    response = requests.get(
-        url,
-        headers=headers,
-        params=params,
-        allow_redirects=False)
+    if request.status_code == 200:
+        data = request.json()
 
-    # If the response status is not 200, return (invalid subreddit or other
-    # error)
-    if response.status_code != 200:
-        print(f"Error: Received status code {response.status_code}")
-        return
+        for topic in (data['data']['children']):
+            for word in topic['data']['title'].split():
+                for i in range(len(word_list)):
+                    if word_list[i].lower() == word.lower():
+                        count[i] += 1
 
-    # Parse the JSON response
-    data = response.json().get('data', {})
-    after = data.get('after', None)  # Get the 'after' token for pagination
-    posts = data.get('children', [])  # Get the list of posts
+        after = data['data']['after']
+        if after is None:
+            save = []
+            for i in range(len(word_list)):
+                for j in range(i + 1, len(word_list)):
+                    if word_list[i].lower() == word_list[j].lower():
+                        save.append(j)
+                        count[i] += count[j]
 
-    # Debugging: Print the number of posts retrieved
-    print(f"Retrieved {len(posts)} posts")
+            for i in range(len(word_list)):
+                for j in range(i, len(word_list)):
+                    if (count[j] > count[i] or
+                            (word_list[i] > word_list[j] and
+                             count[j] == count[i])):
+                        aux = count[i]
+                        count[i] = count[j]
+                        count[j] = aux
+                        aux = word_list[i]
+                        word_list[i] = word_list[j]
+                        word_list[j] = aux
 
-    # Process each post title
-    for post in posts:
-        # Convert title to lowercase and split into words
-        title = post['data']['title'].lower().split()
-        # Debugging: Print the title of each post
-        print(f"Processing title: {title}")
-        for word in word_list:
-            word_lower = word.lower()
-            count = title.count(word_lower)
-            if count > 0:
-                print(
-                    f"Found {count} occurrences of word '{word_lower}' in title: {title}")
-            word_count[word_lower] = word_count.get(word_lower, 0) + count
-
-    # If there is an 'after' token, recursively call count_words to process
-    # the next page
-    if after:
-        count_words(subreddit, word_list, after, word_count)
-    else:
-        # Sort the word counts by count (descending) and alphabetically
-        # (ascending)
-        sorted_word_count = sorted(
-            word_count.items(), key=lambda kv: (-kv[1], kv[0]))
-        for word, count in sorted_word_count:
-            if count > 0:
-                print(f'{word}: {count}')
+            for i in range(len(word_list)):
+                if (count[i] > 0) and i not in save:
+                    print("{}: {}".format(word_list[i].lower(), count[i]))
+        else:
+            count_words(subreddit, word_list, after, count)
